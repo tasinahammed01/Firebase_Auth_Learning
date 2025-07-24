@@ -51,9 +51,29 @@ Authentication and Authorization are both crucial concepts in system security, b
     npm install firebase
     ```
 2.Create project on firebase.console 
-3.Do not use the SDK file directly on project.
+3.Do not use the SDK file directly on project. and export app. and also add getAuth and export it.
 4.use ENV to security:
 ```bash
         npm install dotenv --save
 ```
-5. 
+5. Add sign in method from firebase console. (Google , email pass, github etc..)
+6. provider on here we have the button like : 
+   ```bash
+    
+    import {  GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+    ...........
+    ..........
+
+    const provider = new GoogleAuthProvider();
+
+    const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+    .then((result) => {
+        console.log(result)
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+  };
+
+   ```
