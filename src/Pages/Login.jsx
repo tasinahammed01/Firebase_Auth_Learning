@@ -1,5 +1,5 @@
 // Login.jsx or firebase.auth.js
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import auth from "../firebase/firebase.init";
 import { useState } from "react";
 
@@ -20,25 +20,42 @@ const Login = () => {
       });
   };
 
+  const handleGoogleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setUser(null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="flex flex-col justify-center items-center mt-10 gap-10">
       <h1 className="text-3xl">Login with goole</h1>
-      <button
-        className="bg-black hover:opacity-80 rounded-2xl text-white font-bold py-3 px-4 "
-        onClick={handleGoogleLogin}
-      >
-        Login with goole
-      </button>
 
+      {user ? (
+        <button
+          className="bg-black hover:opacity-80 rounded-2xl text-white font-bold py-3 px-4 "
+          onClick={handleGoogleLogout}
+        >
+          Logout
+        </button>
+      ) : (
+        <button
+          className="bg-black hover:opacity-80 rounded-2xl text-white font-bold py-3 px-4 "
+          onClick={handleGoogleLogin}
+        >
+          Login with google
+        </button>
+      )}
 
-      {
-        user && (
-          <div>
-            <h1>User Name: {user.displayName}</h1>
-            <h1>User Email: {user.email}</h1>
-          </div>
-        )
-      }
+      {user && (
+        <div>
+          <h1>User Name: {user.displayName}</h1>
+          <h1>User Email: {user.email}</h1>
+        </div>
+      )}
     </div>
   );
 };
