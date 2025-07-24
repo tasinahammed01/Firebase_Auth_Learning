@@ -75,7 +75,5 @@ Authentication and Authorization are both crucial concepts in system security, b
         console.log(error)
     })
   };
-
-
-```
+    ```
 
