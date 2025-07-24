@@ -42,3 +42,18 @@ Authentication and Authorization are both crucial concepts in system security, b
 
 - **Authentication** = Identity verification
 - **Authorization** = Permission verification
+
+
+## Steps For  setup firebase
+
+1. Intall Firebase:
+    ```bash
+    npm install firebase
+    ```
+2.Create project on firebase.console 
+3.Do not use the SDK file directly on project.
+4.use ENV to security:
+```bash
+        npm install dotenv --save
+```
+5. 
