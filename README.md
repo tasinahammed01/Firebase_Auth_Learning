@@ -76,4 +76,7 @@ Authentication and Authorization are both crucial concepts in system security, b
     })
   };
 
+
+<button className="bg-black hover:opacity-80 rounded-2xl text-white font-bold py-3 px-4 " onClick={handleGoogleLogin}>Login with goole</button>
+
    ```
