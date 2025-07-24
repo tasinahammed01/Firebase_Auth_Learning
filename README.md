@@ -1,4 +1,4 @@
-## Firebase Authenticaiton 
+## Firebase Authenticaiton
 
 # 🔐 Authentication vs 🔓 Authorization
 
@@ -8,7 +8,7 @@ Authentication and Authorization are both crucial concepts in system security, b
 
 ## 🔐 What is **Authentication**?
 
-- **Definition:** Authentication is the process of verifying *who* a user is.
+- **Definition:** Authentication is the process of verifying _who_ a user is.
 - **Purpose:** To confirm the user's identity.
 - **Example:** Logging in with a username & password, fingerprint, or OTP.
 - **Sequence:** Happens **before** authorization.
@@ -18,7 +18,7 @@ Authentication and Authorization are both crucial concepts in system security, b
 
 ## 🔓 What is **Authorization**?
 
-- **Definition:** Authorization is the process of verifying *what* a user is allowed to do.
+- **Definition:** Authorization is the process of verifying _what_ a user is allowed to do.
 - **Purpose:** To grant access to specific resources or actions.
 - **Example:** A user can edit their profile but not access the admin panel.
 - **Sequence:** Happens **after** authentication.
@@ -28,13 +28,13 @@ Authentication and Authorization are both crucial concepts in system security, b
 
 ## 📊 Comparison Table
 
-| Feature             | Authentication                  | Authorization                   |
-|---------------------|----------------------------------|----------------------------------|
-| **Purpose**         | Verifies identity                | Verifies access level            |
-| **When it occurs**  | First                            | After authentication             |
-| **Based on**        | Credentials (username/password)  | Roles, permissions, access rules |
-| **Determines**      | Who the user is                  | What the user can access         |
-| **Example**         | Login with email & password      | Accessing admin dashboard        |
+| Feature            | Authentication                  | Authorization                    |
+| ------------------ | ------------------------------- | -------------------------------- |
+| **Purpose**        | Verifies identity               | Verifies access level            |
+| **When it occurs** | First                           | After authentication             |
+| **Based on**       | Credentials (username/password) | Roles, permissions, access rules |
+| **Determines**     | Who the user is                 | What the user can access         |
+| **Example**        | Login with email & password     | Accessing admin dashboard        |
 
 ---
 
@@ -43,58 +43,115 @@ Authentication and Authorization are both crucial concepts in system security, b
 - **Authentication** = Identity verification
 - **Authorization** = Permission verification
 
+### 1. Install Firebase
 
-## Steps For  setup firebase
-
-1. Intall Firebase:
-    ```bash
-    npm install firebase
-    ```
-2.Create project on firebase.console 
-3.Do not use the SDK file directly on project. and export app. and also add getAuth and export it.
-4.use ENV to security:
 ```bash
-        npm install dotenv --save
+npm install firebase
 ```
-5. Add sign in method from firebase console. (Google , email pass, github etc..)
-6. provider on here we have the button like : 
-   ```bash
-    
-    import {  GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-    ...........
-    ..........
 
-    const provider = new GoogleAuthProvider();
+---
 
-    const handleGoogleLogin = () => {
-    signInWithPopup(auth, provider)
+### 2. Create a Project on Firebase Console
+
+Go to [https://console.firebase.google.com](https://console.firebase.google.com) and create a new project.
+
+---
+
+### 3. Configure Firebase in Your Project
+
+- Do **not** use the SDK `<script>` file directly in your HTML.
+- Create a file called `firebase.config.js` and export the app and auth:
+
+```js
+// firebase.config.js
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export default app;
+```
+
+---
+
+### 4. Use Environment Variables for Security
+
+Install `dotenv`:
+
+```bash
+npm install dotenv --save
+```
+
+Then, create a `.env` file and add your Firebase config:
+
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+```
+
+---
+
+### 5. Enable Sign-In Methods
+
+In the Firebase Console, go to **Authentication > Sign-in method** and enable methods like:
+
+- Google
+- Email/Password
+- GitHub, etc.
+
+---
+
+### 6. Sign In with Google (Example)
+
+```js
+// Login.jsx
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "./firebase.config";
+
+const provider = new GoogleAuthProvider();
+
+const handleGoogleLogin = () => {
+  signInWithPopup(auth, provider)
     .then((result) => {
-        console.log(result)
+      console.log(result);
     })
     .catch((error) => {
-        console.log(error)
-    })
-  };
+      console.log(error);
+    });
+};
+```
 
+---
 
+## 👤 How to Show Logged-In User
 
-## How to show user : 
+```js
+import { useState } from "react";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "./firebase.config";
 
-```bash
-    
-    import { useState } from "react";
+const Login = () => {
+  const [user, setUser] = useState(null);
+  const provider = new GoogleAuthProvider();
 
-    # import  useState and make a useState hook to set users
-
-    const [user, setUser] = useState(null);
-    
-    # set user form handleGooleLogin:
-
-    const handleGoogleLogin = () => {
+  const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log(result);
-        setUser(result.user);  # here
+        setUser(result.user); // Set the user
       })
       .catch((error) => {
         console.log(error);
@@ -102,14 +159,20 @@ Authentication and Authorization are both crucial concepts in system security, b
       });
   };
 
-    # then show it like this:    
+  return (
+    <div>
+      <button onClick={handleGoogleLogin}>Login with Google</button>
+      {user && (
+        <div>
+          <h1>User Name: {user.displayName}</h1>
+          <h1>User Email: {user.email}</h1>
+        </div>
+      )}
+    </div>
+  );
+};
 
-    {
-        user && ( #check if user exist or not. if exist then show user info.
-          <div>
-            <h1>User Name: {user.displayName}</h1>
-            <h1>User Email: {user.email}</h1>
-          </div>
-        )
-      }
+export default Login;
+```
 
+---
