@@ -76,6 +76,40 @@ Authentication and Authorization are both crucial concepts in system security, b
     })
   };
 
-sdfasdf
 
-dsfds
+
+## How to show user : 
+
+```bash
+    
+    import { useState } from "react";
+
+    # import  useState and make a useState hook to set users
+
+    const [user, setUser] = useState(null);
+    
+    # set user form handleGooleLogin:
+
+    const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log(result);
+        setUser(result.user);  # here
+      })
+      .catch((error) => {
+        console.log(error);
+        setUser(null);
+      });
+  };
+
+    # then show it like this:    
+
+    {
+        user && ( #check if user exist or not. if exist then show user info.
+          <div>
+            <h1>User Name: {user.displayName}</h1>
+            <h1>User Email: {user.email}</h1>
+          </div>
+        )
+      }
+
